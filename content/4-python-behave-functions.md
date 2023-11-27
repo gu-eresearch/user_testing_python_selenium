@@ -26,7 +26,7 @@ def step_impl(context, name, number):
         _field.send_keys(Keys.BACKSPACE)
 ```
 
-
+context.browser.find_element(By.XPATH, "//*[starts-with(@id, 'compound-card-smiles-code-')]")
 
 
 

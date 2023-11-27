@@ -87,62 +87,6 @@ def step_impl(context):
 ### Python common step functions
 I create a python file that contains all the commonly used step functions, that I call throughout multiple tests. This reduces code duplication and increases readability. 
 
-Below is the common.py file for the above search.py file. Note the code in search.py: context.execute_steps(u'when some step'). This is used to call other step functions
-
-
-```python
-from behave import when, then, given
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import time
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-
-@when(u'I click on the button that contains the link_text "{link_text}"')
-def step_impl(context, link_text):
-    _button = WebDriverWait(context.browser, timeout).until(
-        EC.presence_of_element_located((By.LINK_TEXT, link_text))
-        )
-    
-    _button.click()
-
-@when(u'I send the text "{text}" to the id "{id}"')
-def step_impl(context, text, id):
-    _field = WebDriverWait(context.browser, timeout).until(
-        EC.visibility_of_element_located((By.ID, id))
-        )
-    
-    wait_element_scroll_complete(context, _field)
-    _field.send_keys(text)
-
-@when(u'I click on the "{id}"')
-def step_impl(context, id):
-    _button = WebDriverWait(context.browser, timeout).until(
-        EC.element_to_be_clickable((By.ID, id))
-        )
-
-    wait_element_scroll_complete(context, _button)
-    _button.click()
-
-@when(u'I navigate to the search page')
-def step_impl(context):
-    context.browser.get(urljoin(context.config.userdata.get("baseurl"), "search"))
-
-    _ = WebDriverWait(context.browser, timeout).until(
-        EC.visibility_of_element_located((By.ID, "searchInputLabel"))
-        )
-
-@then(u'The text "{text}" is NOT visible in the css_selector "{css_selector}"')
-def step_impl(context, text, css_selector):
-    _text = WebDriverWait(context.browser, timeout).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, css_selector))
-        )
-    
-    assert(_text.text not in text)
-
-```
-
-
 
 ### Python Environment File
 A python environment file sits within the feature folder. This module defines code to run before and after certain events, and can include opening/closing a web browser and taking snapshots if a step fails.

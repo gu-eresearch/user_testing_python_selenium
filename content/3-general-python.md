@@ -18,23 +18,27 @@ _css_class.get_attribute('value_of_css_property')
 
 
 
-Select an element using multiple attributes in a signle xpath query
+## Select an element using multiple attributes in a single xpath query
 ```python
 "//*[@id='searchInputLabel' and @value='']"
 ```
 
-scroll using javascript
+## scroll using javascript
 ```python
 context.browser.execute_script("window.scrollTo(X, Y)")
 ```
 execute_script is a python function used to execute javascript
 
 
-accept a popup
+## accept a popup
 ```python
 browser.switch_to.alert.accept()
 ```
 
+## switch windows
+```python
+context.browser.switch_to.window(context.browser.window_handles[1])
+```
 
 split based on new lines
 ```python
@@ -43,7 +47,7 @@ _selector.text.split('\n')
 
 
 
-Select a value from a dropdown menu
+## Select a value from a dropdown menu
 ```python
 select = Select(context.browser.find_element(By.ID, 'importlabextractsform-importid'))
 select.select_by_visible_text('Banana')
@@ -62,7 +66,7 @@ assert(description in table.text and search_term in table.text)
 ```
 
 
-Send keys
+## Send keys
 ```python
 from selenium.webdriver.common.keys import Keys
 _element.send_keys(text)
@@ -74,4 +78,38 @@ _element.send_keys(Keys.BACKSPACE)
 ```python
 _element.click()
 _element.clear()
+```
+
+## swipe left on a button
+
+```python
+xsearch = "//*[@class=" + '"'  + css_class + '"' + "]"
+download_button = context.browser.find_element(By.XPATH, xsearch)
+actions = ActionChains(context.browser)
+actions.drag_and_drop_by_offset(download_button, -80, 0)
+actions.perform()
+```
+
+## offline / online
+
+offline
+```python
+def step_impl(context):
+    context.browser.set_network_conditions(
+        latency=0,
+        offline=True,
+        download_throughput=500 * 1024,
+        upload_throughput=500 * 1024)
+    time.sleep(2)
+```
+
+online
+```python
+def step_impl(context):
+    context.browser.set_network_conditions(
+        latency=0,
+        offline=False,
+        download_throughput=500 * 1024,
+        upload_throughput=500 * 1024)
+    time.sleep(2)
 ```

@@ -1,9 +1,8 @@
 ---
-title: General python 
-nav: General python 
-topics: General python 
-description: >
-    This text is a "section description". Below is "section topics", followed by an example section video embed. This page details how to write content pages and add interest with includes.
+title: General python/selenium commands
+nav: General python/selenium commands 
+topics: General python/selenium commands 
+description: General python/selenium commands 
 ---
 
 ## Get attributes of a web element

@@ -1,6 +1,6 @@
 ---
-title: General Layout
-nav: General Layout
+title: How to set up python and selenium for testing
+nav: Setup
 ---
 
 

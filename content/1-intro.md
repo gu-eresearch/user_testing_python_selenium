@@ -8,22 +8,12 @@ nav: Setup
 
 The file structure is important when running python/behave tests. Two folders are required, features, and steps. Features contains the .feature files, the python environment file and the steps folder. The steps folder contains the .py files.
 
-features/
-|--- steps/
-|    |--- common.py
-|    |--- import.py
-|    |--- login.py
-|    |--- search.py
-import.feature
-login.feature
-search.feature
-environment.py
+{% include figure.html img="file-structure.png" alt="file structure" caption="The file structure required for running selenium user tests" width="75%" %}
 
-It is not necessary to name the steps and feature file the same, I find that it keeps the tests organised and themed.
-
+It is not necessary to name the steps and feature file the same, however I find that it keeps the tests organised and themed.
 
 ### feature files
-The feature file are written in Gherkin syntax and are human readable steps, they usually follow user requirements.
+The feature file are written in [Gherkin syntax](https://cucumber.io/docs/gherkin/) and are human readable steps, they usually follow user requirements.
 
 
 Here is a look at the search.feature file.
@@ -34,15 +24,16 @@ Feature: Search for compounds based on different compound properties
     Scenario: Search for compound using a smiles code
         Given I am logged in
         When I search for the compound "Cc1ccc(c(=O)[nH]1)C(=O)N1CCCN(CC1)CC(F)(F)F" in the search bar
-        And I do a "similarity" search
-        Then 1 or more results are returned
+        Then The compound "Cc1ccc(c(=O)[nH]1)C(=O)N1CCCN(CC1)CC(F)(F)F" is returned
 
 ```
-
+The steps within these feature file are executed using python code.
 
 ### python step files
-The python steps file, search.py contains the code that executes the steps in feature files. 
+The python steps file, search.py contains the code that executes the steps in feature files. There are a suite of [selenium specific libraries](https://selenium-python.readthedocs.io/) for python.
+Notice the given and when hooks, they indicate what code python runs for each step in a feature file.
 
+Below is the python code for the first step in the above Feature file "Given I am logged in"
 
 ```python
 from behave import given, when
@@ -51,6 +42,7 @@ import time
 
 @given('I am logged in')
 def login_admin(context):
+    # sends the url to the browser, in the below code I have defined "baseurl" in the bash code that runs the users tests
     context.browser.get(context.config.userdata.get("baseurl"))
 
     # click login button
@@ -60,33 +52,34 @@ def login_admin(context):
     time.sleep(1)
 
     context.execute_steps(u'when I click on the "{id}"'.format(id='kc-login'))
-
-@when(u'I search for the compound "{compound}" in the search bar')
-def step_impl(context, compound):
-    context.execute_steps(u'when I navigate to the search page')
-    context.execute_steps(u'when I send the text "{compound}" to the id "{id}"'.format(compound=compound, id="searchInputLabel"))
-
-
-@when(u'I do a "{search_type}" search')
-def step_impl(context, search_type):
-    if search_type == "similarity":
-        id = "inline-radio-1"
-    elif search_type == "substructure":
-        id = "inline-radio-2"
-    elif search_type == "full text":
-        id = "inline-radio-3"
-    context.execute_steps(u'when I click on the "{id}"'.format(id=id))
-
-@then(u'1 or more results are returned')
-def step_impl(context):
-    context.execute_steps(u'then The text "{text}" is NOT visible in the css_selector "{css_selector}"'.format(text="0 Result", css_selector="div.d-flex.justify-content-start.align-items-center.col-md-4"))
-
 ```
 
+Notice the code the "context.execute_steps(u'when abcd "{1234}" efgh'.format(1234='ssdfg'))". This is refering to another step, and allows you to easily recycle commonly used python code. I usually put such common code in a python file called common.py.
 
 ### Python common step functions
 I create a python file that contains all the commonly used step functions, that I call throughout multiple tests. This reduces code duplication and increases readability. 
 
+Below is the python code for the functions above "context.execute_steps(u'when I click on the button that contains the id "{id}"'.format(id='sign_in'))"
+
+```python
+from behave import when
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+@when(u'I click on the button that contains the id "{id}"')
+def step_impl(context, id):
+    # locate the button using its id
+    _button = WebDriverWait(context.browser, 30).until(
+        EC.visibility_of_element_located((By.ID, id))
+        )
+
+    # the following executes javascript code
+    context.browser.execute_script("arguments[0].scrollIntoView();", _button)
+    
+    # click on the button
+    _button.click()
+```
 
 ### Python Environment File
 A python environment file sits within the feature folder. This module defines code to run before and after certain events, and can include opening/closing a web browser and taking snapshots if a step fails.

@@ -31,7 +31,7 @@ execute_script is a python function used to execute javascript
 
 ## accept a popup
 ```python
-browser.switch_to.alert.accept()
+context.browser.switch_to.alert.accept()
 ```
 
 ## switch windows

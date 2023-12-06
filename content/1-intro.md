@@ -1,7 +1,19 @@
 ---
-title: How to set up python and selenium for testing
+title: Setting up Python and Selenium for user testing
 nav: Setup
 ---
+
+### What is user testing
+
+User testing is a method used in software development to evaluate a product's user interface and the overall flow 'user experience' of the product. Unit testing 
+
+
+### Selenium and Python for User testing
+
+(Selenium webdriver)[https://www.selenium.dev/documentation/webdriver/] is a set of bindings used to natively control web browsers. It lets you use code to interact with a webpage or web app in the same way a user would. 
+(The selenium library)[https://pypi.org/project/selenium/] contains bindings that are used to automate web browser interaction from Python.
+
+
 
 
 ### File Structure
@@ -84,7 +96,7 @@ def step_impl(context, id):
 ### Python Environment File
 A python environment file sits within the feature folder. This module defines code to run before and after certain events, and can include opening/closing a web browser and taking snapshots if a step fails.
 
-The following has a fixture to run a chrome web browser in headless an normal states. Headless is required to run in CICD pipelines such as Jenkins, while a normal state is good for troubleshooting while running tests locally.
+You will need to setup [drivers](https://selenium-python.readthedocs.io/installation.html#drivers) 'the web browser', either locally or within your CICD environment. The following environment file has a fixture to run a chrome web browser in headless 'without a graphical user interface' and normal states. Headless is required to run in CICD pipelines such as Jenkins, while a normal state is good for troubleshooting while running tests locally.
 
 ```python
 from behave import fixture, use_fixture

@@ -22,15 +22,15 @@ timeout = 30
 work_dir = os.getcwd()
 
 def download_wait(path_to_downloads = work_dir):
-    seconds = 0
+    seconds = 0.0
     dl_wait = True
     while dl_wait and seconds < timeout:
-        time.sleep(1)
+        time.sleep(0.1)
         dl_wait = False
         for fname in os.listdir(path_to_downloads):
             if fname.startswith('file_name') and fname.endswith('.csv'):
                 dl_wait = True
-        seconds += 1
+        seconds += 0.1
     return seconds
 ```
 

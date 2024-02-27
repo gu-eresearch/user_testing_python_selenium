@@ -3,18 +3,17 @@ title: Setting up Python and Selenium for user testing
 nav: Setup
 ---
 
-### What is user testing
+### What is user testing and why it should be implemented
 
-User testing is a method used in software development to evaluate a product's user interface and the overall flow 'user experience' of the product. Unit testing 
+User testing is a method used in software development to evaluate a product's user interface and the overall flow 'user experience' of the product. For example, a user can log into the application, select three blue t-shirts and purchase them for a discount using their sicount coupon.
 
+Ideally user tests are implemented as part of CICD (continuous integration, continuous deployment), check the following out for more information about [CICD](https://www.redhat.com/en/topics/devops/what-is-ci-cd). The idea behind this is that any new code change that is pushed to the repository is run through user tests via CICD. If a user test fails then the new code will not be deployed.
 
-### Selenium and Python for User testing
+### Using Selenium and Behave within Python for User testing
 
-(Selenium webdriver)[https://www.selenium.dev/documentation/webdriver/] is a set of bindings used to natively control web browsers. It lets you use code to interact with a webpage or web app in the same way a user would. 
-(The selenium library)[https://pypi.org/project/selenium/] contains bindings that are used to automate web browser interaction from Python.
-
-
-
+[Selenium webdriver](https://www.selenium.dev/documentation/webdriver/) is a set of bindings used to natively control web browsers. It lets us use code to interact with a webpage or web app in the same way a user would. 
+[Behave](https://behave.readthedocs.io/en/stable/) provides a syntax to write tests using a natural language syntax. Such a syntax encourages collaboration among developers, QA professionals, and non-technical or business participants in software projects.
+[The python selenium library](https://pypi.org/project/selenium/) contains bindings that python uses to interact with the selenium webdriver.
 
 ### File Structure
 

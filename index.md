@@ -3,7 +3,7 @@ title: Home
 layout: Home
 ---
 
-# User testing framework with Python and Selenium
+# Automated user testing framework with Python, Selenium and Behave
 
 {% include figure.html img="uidaho-workshop.jpg" alt="intro image here" caption="Library workshop" width="75%" %}
 

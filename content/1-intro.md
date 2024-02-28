@@ -1,33 +1,36 @@
 ---
-title: Setting up Python and Selenium for user testing
+title: Setting up Python, Selenium and Behave for automated user testing
 nav: Setup
 ---
 
-### What is user testing and why it should be implemented
+### What is automated user testing and why it should be implemented
 
-User testing is a method used in software development to evaluate a product's user interface and the overall flow 'user experience' of the product. For example, a user can log into the application, select three blue t-shirts and purchase them for a discount using their sicount coupon.
+User testing is a method used in software development to evaluate a product's user interface and the overall flow 'user experience' of the product. For example, a user can log into the application, select three blue t-shirts and purchase them for a discount using a coupon. User tests have the added bonus of indirectly performing integration and regression tests. 
 
-Ideally user tests are implemented as part of CICD (continuous integration, continuous deployment), check the following out for more information about [CICD](https://www.redhat.com/en/topics/devops/what-is-ci-cd). The idea behind this is that any new code change that is pushed to the repository is run through user tests via CICD. If a user test fails then the new code will not be deployed.
+Ideally user tests are automatically implemented as part of CICD (continuous integration, continuous deployment), check the following out for more information about [CICD](https://www.redhat.com/en/topics/devops/what-is-ci-cd). The idea behind this is that any new code change that is pushed to the repository is run through user tests via CICD. If a user test fails then the new code will not be deployed.
 
-### Using Selenium and Behave within Python for User testing
+### Using Selenium and Behave within Python for automated user testing
 
-[Selenium webdriver](https://www.selenium.dev/documentation/webdriver/) is a set of bindings used to natively control web browsers. It lets us use code to interact with a webpage or web app in the same way a user would. 
-[Behave](https://behave.readthedocs.io/en/stable/) provides a syntax to write tests using a natural language syntax. Such a syntax encourages collaboration among developers, QA professionals, and non-technical or business participants in software projects.
-[The python selenium library](https://pypi.org/project/selenium/) contains bindings that python uses to interact with the selenium webdriver.
+There are many different ways of running automated user tests, in the following we will be using Python, Selenium and Behave. [Behave](https://behave.readthedocs.io/en/stable/) provides a syntax to write tests using a natural language syntax. Such a syntax encourages collaboration among developers, QA professionals, and non-technical or business participants in software projects.
+
+[The python selenium library](https://pypi.org/project/selenium/) contains bindings that python uses to interact with the selenium webdriver. [Selenium webdriver](https://www.selenium.dev/documentation/webdriver/) is a set of bindings used to natively control web browsers. It lets us use code to interact with a webpage or web app in the same way a user would. i.e. it allows us to programatically click on buttons, write in text fields and download data.ß
+
+Finally, you need to install a webdriver for your prefered web browser that the tests willß run on, [chromedriver](https://developer.chrome.com/docs/chromedriver) and Firefoxes [geckodriver](https://firefox-source-docs.mozilla.org/testing/geckodriver/) are the most common.
+
 
 ### File Structure
 
-The file structure is important when running python/behave tests. Two folders are required, features, and steps. Features contains the .feature files, the python environment file and the steps folder. The steps folder contains the .py files.
+The file structure is important when running python/behave tests. Two folders are required, features, and steps. Features contains the files with the .feature extension, the python environment file and the steps folder. The steps folder contains the .py files that contain the code to execute the Behave tests. 
 
 {% include figure.html img="file-structure.png" alt="file structure" caption="The file structure required for running selenium user tests" width="75%" %}
 
 It is not necessary to name the steps and feature file the same, however I find that it keeps the tests organised and themed.
 
-### feature files
-The feature file are written in [Gherkin syntax](https://cucumber.io/docs/gherkin/) and are human readable steps, they usually follow user requirements.
+### Behave feature files
+The Behave feature files are written in [Gherkin syntax](https://cucumber.io/docs/gherkin/) and are human readable steps, they usually follow user requirements.
 
+Here is a look at the search.feature file. This set of tests logs into a chemical compound library app, searches for a specific compound, and then checks that the compound is returned. Notice the keywords given-when-then that are used as acceptance criteria. Following this format makes it easier for the entire team to stay on the same page with expectations for how the software should work.
 
-Here is a look at the search.feature file.
 ```gherkin
 
 Feature: Search for compounds based on different compound properties
@@ -38,7 +41,7 @@ Feature: Search for compounds based on different compound properties
         Then The compound "Cc1ccc(c(=O)[nH]1)C(=O)N1CCCN(CC1)CC(F)(F)F" is returned
 
 ```
-The steps within these feature file are executed using python code.
+The steps within these feature file are executed using python code. The first line imports the given-when-then criteria "from behave import given, when" into python and decorators are used to turn the acceptance tests from the feature files into python functions.
 
 ### python step files
 The python steps file, search.py contains the code that executes the steps in feature files. There are a suite of [selenium specific libraries](https://selenium-python.readthedocs.io/) for python.
@@ -53,43 +56,24 @@ import time
 
 @given('I am logged in')
 def login_admin(context):
-    # sends the url to the browser, in the below code I have defined "baseurl" in the bash code that runs the users tests
-    context.browser.get(context.config.userdata.get("baseurl"))
+    # sends the url to the browser
+    context.browser.get(context.config.userdata.get("https://my-app.uni.edu.au"))
 
     # click login button
-    context.execute_steps(u'when I click on the button that contains the link_text "{link_text}"'.format(link_text='Sign In'))   
-    context.execute_steps(u'when I send the text "{text}" to the id "{id}"'.format(text=context.config.userdata.get("username"), id="username"))
-    context.execute_steps(u'when I send the text "{text}" to the id "{id}"'.format(text=context.config.userdata.get("password"), id="password"))
-    time.sleep(1)
+        username = WebDriverWait(context.browser, timeout).until(
+            EC.element_to_be_clickable((By.ID, "username"))
+            )
+        username.send_keys("my_user_name")
 
-    context.execute_steps(u'when I click on the "{id}"'.format(id='kc-login'))
-```
-
-Notice the code the "context.execute_steps(u'when abcd "{1234}" efgh'.format(1234='ssdfg'))". This is refering to another step, and allows you to easily recycle commonly used python code. I usually put such common code in a python file called common.py.
-
-### Python common step functions
-I create a python file that contains all the commonly used step functions, that I call throughout multiple tests. This reduces code duplication and increases readability. 
-
-Below is the python code for the functions above "context.execute_steps(u'when I click on the button that contains the id "{id}"'.format(id='sign_in'))"
-
-```python
-from behave import when
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
-@when(u'I click on the button that contains the id "{id}"')
-def step_impl(context, id):
-    # locate the button using its id
-    _button = WebDriverWait(context.browser, 30).until(
-        EC.visibility_of_element_located((By.ID, id))
-        )
-
-    # the following executes javascript code
-    context.browser.execute_script("arguments[0].scrollIntoView();", _button)
+        password = WebDriverWait(context.browser, timeout).until(
+            EC.element_to_be_clickable((By.ID, "password"))
+            )
+        password.send_keys("my_password")
     
-    # click on the button
-    _button.click()
+        login_button = WebDriverWait(context.browser, timeout).until(
+            EC.element_to_be_clickable((By.ID, "login"))
+            )
+        login_button.click()
 ```
 
 ### Python Environment File

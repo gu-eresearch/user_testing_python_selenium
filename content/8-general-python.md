@@ -17,9 +17,20 @@ _css_class.get_attribute('value_of_css_property')
 
 
 
-## Select an element using multiple attributes in a single xpath query
+## Different ways of selecting elements using xpath's
+
+Select an element using multiple attributes in a single xpath query
 ```python
 "//*[@id='searchInputLabel' and @value='']"
+```
+
+Select an element using a partial string
+```python
+"//*[starts-with(@class, 'ChoiceGroup')]"
+
+"//*[ends-with(@id, 'ChoiceGroup')]"
+
+"//*[contains(.,'AI Inaccurate')]"
 ```
 
 ## scroll using javascript
@@ -39,7 +50,7 @@ context.browser.switch_to.alert.accept()
 context.browser.switch_to.window(context.browser.window_handles[1])
 ```
 
-split based on new lines
+## split based on new lines
 ```python
 _selector.text.split('\n')
 ```

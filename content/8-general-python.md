@@ -32,12 +32,47 @@ Select an element using a partial string
 
 "//*[contains(.,'AI Inaccurate')]"
 ```
+## 
+```python
+selector_visible('video', 'selector').find_element(By.XPATH, "//*[contains(.,'AI Inaccurate')]").click()
+selector_visible('video', 'selector').get_attribute('src')
+```
+
+# Scrolling and navigation
+
+## scroll using ActionChains
+
+```python
+iframe = driver.find_element(By.TAG_NAME, "iframe")
+ActionChains(driver)\
+    .scroll_to_element(iframe)\
+    .perform()
+```
 
 ## scroll using javascript
 ```python
 context.browser.execute_script("window.scrollTo(X, Y)")
 ```
 execute_script is a python function used to execute javascript
+
+## wait for scrolling to stop
+```python
+@when(u'scrolling has stopped')
+# function that waits until scrolling down the page has stopped
+def step_impl(context):
+    initial_scroll_position = context.driver.execute_script("return window.scrollY;")
+
+    seconds = 0.0
+    _scrolling = True
+    while _scrolling and seconds < timeout:
+        after_click_scroll_position = context.driver.execute_script("return window.scrollY;")
+        initial_scroll_position = after_click_scroll_position
+        if initial_scroll_position:
+            _scrolling = False
+        seconds += 0.1
+        time.sleep(0.1)
+```
+
 
 
 ## accept a popup
@@ -48,6 +83,13 @@ context.browser.switch_to.alert.accept()
 ## switch windows
 ```python
 context.browser.switch_to.window(context.browser.window_handles[1])
+```
+
+## navigate forward and back
+
+```python
+browser.back()
+browser.forward()
 ```
 
 ## split based on new lines
@@ -65,8 +107,26 @@ select.select_by_value('1679456710')
 select.select_by_index(2)
 select.select_by_visible_text('full text')
 ```
+OR 
 
-Assert that the string description and the string search_term are present as text in a table 
+```python
+def select_option_by_value(driver, select_id, value):
+    select_element = WebDriverWait(driver, timeout).until(
+        EC.presence_of_element_located(
+            (By.CSS_SELECTOR, f'[id="{select_id}"]'))
+    )
+
+    actions = ActionChains(driver)
+    actions.move_to_element(select_element)
+    actions.click().perform()
+
+    actions.send_keys(value)
+    actions.send_keys(Keys.RETURN)
+    actions.perform()
+    time.sleep(3)
+```
+
+## Assert that the string description and the string search_term are present as text in a table 
 ```python
 description = "super powerful owls"
 search_term = "flight"
@@ -122,4 +182,28 @@ def step_impl(context):
         download_throughput=500 * 1024,
         upload_throughput=500 * 1024)
     time.sleep(2)
+```
+
+## Download file/ Delete file once downloaded
+
+
+function to wait up until timeout files to download - then 2nd function to delete downloaded file
+```python
+def download_wait(fname_start, fname_end, path_to_downloads = os.getcwd()):
+    seconds = 0
+    dl_wait = True
+    time.sleep(1)
+    while dl_wait and seconds < timeout:
+        # time.sleep(1)
+        dl_wait = False
+        for fname in os.listdir(path_to_downloads):
+            if fname.startswith(fname_start) and fname.endswith(fname_end):
+                dl_wait = True
+        seconds += 1
+    return seconds
+
+def download_delete(fname_start, fname_end, path_to_downloads = os.getcwd()):
+    for fname in os.listdir(path_to_downloads):
+        if fname.startswith(fname_start) and fname.endswith(fname_end):
+            os.remove(fname)
 ```

@@ -1,6 +1,6 @@
 ---
 title: Setting up Python, Selenium and Behave for automated user testing
-nav: Setup
+nav: Introduction
 ---
 
 ### What is automated user testing and why it should be implemented

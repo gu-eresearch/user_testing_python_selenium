@@ -29,52 +29,13 @@ It is not necessary to name the steps and feature file the same, however I find 
 ### Behave feature files
 The Behave feature files are written in [Gherkin syntax](https://cucumber.io/docs/gherkin/) and are human readable steps, they usually follow user requirements.
 
-Here is a look at the search.feature file. This set of tests logs into a chemical compound library app, searches for a specific compound, and then checks that the compound is returned. Notice the keywords given-when-then that are used as acceptance criteria. Following this format makes it easier for the entire team to stay on the same page with expectations for how the software should work.
+Consider the [search_for_a_course.feature](https://github.com/gu-eresearch/selenium-python-code/blob/main/uat/feature/search_for_a_course.feature) feature file. This feature contains a set of tests that search for degrees on the Griffith University website and validate the returned search query. Notice the given-when-then keywords that are used as acceptance criteria. Following this format makes it easier for the entire team to stay on the same page with expectations for how the software should work.
 
-```gherkin
-
-Feature: Search for compounds based on different compound properties
-
-    Scenario: Search for compound using a smiles code
-        Given I am logged in
-        When I search for the compound "Cc1ccc(c(=O)[nH]1)C(=O)N1CCCN(CC1)CC(F)(F)F" in the search bar
-        Then The compound "Cc1ccc(c(=O)[nH]1)C(=O)N1CCCN(CC1)CC(F)(F)F" is returned
-
-```
-The steps within these feature file are executed using python code. The first line imports the given-when-then criteria "from behave import given, when" into python and decorators are used to turn the acceptance tests from the feature files into python functions.
+The steps within these feature file are executed using python code, which is found within the steps file.
 
 ### python step files
-The python steps file, search.py contains the code that executes the steps in feature files. There are a suite of [selenium specific libraries](https://selenium-python.readthedocs.io/) for python.
-Notice the given and when hooks, they indicate what code python runs for each step in a feature file.
-
-Below is the python code for the first step in the above Feature file "Given I am logged in"
-
-```python
-from behave import given, when
-from selenium.common.exceptions import NoSuchElementException
-import time
-
-@given('I am logged in')
-def login_admin(context):
-    # sends the url to the browser
-    context.browser.get(context.config.userdata.get("https://my-app.uni.edu.au"))
-
-    # click login button
-        username = WebDriverWait(context.browser, timeout).until(
-            EC.element_to_be_clickable((By.ID, "username"))
-            )
-        username.send_keys("my_user_name")
-
-        password = WebDriverWait(context.browser, timeout).until(
-            EC.element_to_be_clickable((By.ID, "password"))
-            )
-        password.send_keys("my_password")
-    
-        login_button = WebDriverWait(context.browser, timeout).until(
-            EC.element_to_be_clickable((By.ID, "login"))
-            )
-        login_button.click()
-```
+The python steps file, [search_for_a_course.py](https://github.com/gu-eresearch/selenium-python-code/blob/main/uat/steps/search_for_a_course.py) contains the code that executes the steps in feature file. There are a suite of [selenium specific libraries](https://selenium-python.readthedocs.io/) for python.
+Notice the given, when and then hooks, they indicate what code python runs for each step in a feature file.
 
 ### Python Environment File
 A python environment file sits within the feature folder. This module defines code to run before and after certain events, and can include opening/closing a web browser and taking snapshots if a step fails.

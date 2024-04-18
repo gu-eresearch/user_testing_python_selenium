@@ -55,25 +55,6 @@ context.browser.execute_script("window.scrollTo(X, Y)")
 ```
 execute_script is a python function used to execute javascript
 
-## wait for scrolling to stop
-```python
-@when(u'scrolling has stopped')
-# function that waits until scrolling down the page has stopped
-def step_impl(context):
-    initial_scroll_position = context.driver.execute_script("return window.scrollY;")
-
-    seconds = 0.0
-    _scrolling = True
-    while _scrolling and seconds < timeout:
-        after_click_scroll_position = context.driver.execute_script("return window.scrollY;")
-        initial_scroll_position = after_click_scroll_position
-        if initial_scroll_position:
-            _scrolling = False
-        seconds += 0.1
-        time.sleep(0.1)
-```
-
-
 
 ## accept a popup
 ```python
@@ -98,44 +79,6 @@ _selector.text.split('\n')
 ```
 
 
-
-## Select a value from a dropdown menu
-```python
-select = Select(context.browser.find_element(By.ID, 'importlabextractsform-importid'))
-select.select_by_visible_text('Banana')
-select.select_by_value('1679456710')
-select.select_by_index(2)
-select.select_by_visible_text('full text')
-```
-OR 
-
-```python
-def select_option_by_value(driver, select_id, value):
-    select_element = WebDriverWait(driver, timeout).until(
-        EC.presence_of_element_located(
-            (By.CSS_SELECTOR, f'[id="{select_id}"]'))
-    )
-
-    actions = ActionChains(driver)
-    actions.move_to_element(select_element)
-    actions.click().perform()
-
-    actions.send_keys(value)
-    actions.send_keys(Keys.RETURN)
-    actions.perform()
-    time.sleep(3)
-```
-
-## Assert that the string description and the string search_term are present as text in a table 
-```python
-description = "super powerful owls"
-search_term = "flight"
-
-table = context.browser.find_element(By.XPATH, '//table/tbody')
-assert(description in table.text and search_term in table.text)
-```
-
-
 ## Send keys
 ```python
 from selenium.webdriver.common.keys import Keys
@@ -148,16 +91,6 @@ _element.send_keys(Keys.BACKSPACE)
 ```python
 _element.click()
 _element.clear()
-```
-
-## swipe left on a button
-
-```python
-xsearch = "//*[@class=" + '"'  + css_class + '"' + "]"
-download_button = context.browser.find_element(By.XPATH, xsearch)
-actions = ActionChains(context.browser)
-actions.drag_and_drop_by_offset(download_button, -80, 0)
-actions.perform()
 ```
 
 ## offline / online
@@ -185,7 +118,6 @@ def step_impl(context):
 ```
 
 ## Download file/ Delete file once downloaded
-
 
 function to wait up until timeout files to download - then 2nd function to delete downloaded file
 ```python

@@ -7,7 +7,7 @@ nav: Introduction
 
 User testing is a method used in software development to evaluate a product's user interface and the overall flow 'user experience' of the product. For example, a user can log into the application, select three blue t-shirts and purchase them for a discount using a coupon. User tests have the added bonus of indirectly performing integration and regression tests. 
 
-Ideally user tests are automatically implemented as part of CICD (continuous integration, continuous deployment), check the following out for more information about [CICD](https://www.redhat.com/en/topics/devops/what-is-ci-cd). The idea behind this is that any new code change that is pushed to the repository is run through user tests via CICD. If a user test fails then the new code will not be deployed.
+Ideally user tests are automatically implemented as part of CICD (continuous integration, continuous deployment), check the following out for more information about [CICD](https://www.redhat.com/en/topics/devops/what-is-ci-cd). The idea behind this is that any new code change that is pushed to the repository is run through user tests via CICD. If a user test fails then the incoming code changes will not be deployed to UAT, dev or production environments.
 
 ### Using Selenium and Behave within Python for automated user testing
 

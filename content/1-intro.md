@@ -1,6 +1,6 @@
 ---
 title: Setting up Python, Selenium and Behave for automated user testing
-nav: Introduction
+nav: Introduction & Setup
 ---
 
 ### What is automated user testing and why it should be implemented
@@ -11,16 +11,17 @@ Ideally user tests are automatically implemented as part of CICD (continuous int
 
 ### Using Selenium and Behave within Python for automated user testing
 
-There are many different ways of running automated user tests, in the following we will be using Python, Selenium and Behave. [Behave](https://behave.readthedocs.io/en/stable/) provides a syntax to write tests using a natural language syntax. Such a syntax encourages collaboration among developers, QA professionals, and non-technical or business participants in software projects.
+There are many different ways of running automated user tests, in this tutorial we will be using the Python-Selenium-Behave framework. [Behave](https://behave.readthedocs.io/en/stable/) provides a syntax to write tests using a natural language syntax. Such a syntax encourages collaboration among developers, QA professionals, and non-technical or business participants in software projects.
 
-[The python selenium library](https://pypi.org/project/selenium/) contains bindings that python uses to interact with the selenium webdriver. [Selenium webdriver](https://www.selenium.dev/documentation/webdriver/) is a set of bindings used to natively control web browsers. It lets us use code to interact with a webpage or web app in the same way a user would. i.e. it allows us to programatically click on buttons, write in text fields and download data.ß
+[The python selenium library](https://pypi.org/project/selenium/) contains bindings that python uses to interact with the selenium webdriver. [Selenium webdriver](https://www.selenium.dev/documentation/webdriver/) is a set of bindings used to natively control web browsers. It lets us use code to interact with a webpage or web app in the same way a user would. i.e. it allows us to programatically click on buttons, write in text fields and download data.
 
-Finally, you need to install a webdriver for your prefered web browser that the tests willß run on, [chromedriver](https://developer.chrome.com/docs/chromedriver) and Firefoxes [geckodriver](https://firefox-source-docs.mozilla.org/testing/geckodriver/) are the most common.
+Finally, you need to install a webdriver for your prefered web browser that the tests will run on, [chromedriver](https://developer.chrome.com/docs/chromedriver) and Firefoxes [geckodriver](https://firefox-source-docs.mozilla.org/testing/geckodriver/) are the most common.
 
+The code for this tutorial is [here](https://github.com/gu-eresearch/selenium-python-code/tree/main/uat)
 
 ### File Structure
 
-The file structure is important when running python/behave tests. Two folders are required, features, and steps. Features contains the files with the .feature extension, the python environment file and the steps folder. The steps folder contains the .py files that contain the code to execute the Behave tests. 
+The file structure is important when running python/behave tests. Two directories are required, features, and steps. Features contains the test files written in the Behave syntax and with the .feature extension. The steps folder has the .py files that contain the python code to execute the Behave tests. Finally a python environment file is stored in the root directory, this file contains the python behave hooks to execute behave from a CLI.
 
 {% include figure.html img="file-structure.png" alt="file structure" caption="The file structure required for running selenium user tests" width="75%" %}
 
